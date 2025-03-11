@@ -32,9 +32,9 @@ pub mod slinear11 {
         if exp > 16 {
             exp -= 32;
         }
-        let mut mant: u32 = val as u32 & 0x000007FF;
+        let mut mant: i32 = val as i32 & 0x000007FF;
         if mant > 0x03FF {
-            mant |= 0xFFFFF800;
+            mant |= 0xFFFFF800u32 as i32;
         }
 
         let base: u8 = 2;
@@ -71,6 +71,7 @@ mod tests {
         assert_eq!(result, 0.5);
         assert_ne!(result, 0.3);
         assert_eq!(slinear11::to(0xE054), 5.25);
+        assert_eq!(slinear11::to(0xEDAA), -74.75);
     }
 
     #[test]
@@ -78,6 +79,7 @@ mod tests {
         let result = slinear11::from(5.25, -4);
         assert_eq!(result, 0xE054);
         assert_ne!(result, 0xE000);
+        assert_eq!(slinear11::from(-74.75, -3), 0xEDAA);
     }
 
     // #[test]
