@@ -13,7 +13,17 @@ pub mod ulinear16 {
 }
 
 pub mod slinear11 {
-    pub fn from(val: f32, exp: i8) -> u16 {
+    pub fn from(val: f32) -> u16 {
+        // Generate a sane exponent for voltage ranges
+        let exp: i8 = match val.abs() {
+            0.0..=20.0 => -4,
+            20.0..=80.0 => -3,
+            80.0..=120.0 => -2,
+            120.0..=200.0 => -1,
+            200.0..=400.0 => 0,
+            400.0..=800.0 => 1,
+            _ => -3,
+        };
         let base: u32 = 2;
         let lsb: f32 = if exp.is_positive() {
             base.pow(exp as u32) as f32
@@ -76,10 +86,10 @@ mod tests {
 
     #[test]
     fn float_to_slinear11() {
-        let result = slinear11::from(5.25, -4);
+        let result = slinear11::from(5.25);
         assert_eq!(result, 0xE054);
         assert_ne!(result, 0xE000);
-        assert_eq!(slinear11::from(-74.75, -3), 0xEDAA);
+        assert_eq!(slinear11::from(-74.75), 0xEDAA);
     }
 
     // #[test]
