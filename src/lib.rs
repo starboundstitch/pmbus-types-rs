@@ -47,7 +47,7 @@ pub mod slinear11 {
             mant |= 0xFFFFF800u32 as i32;
         }
 
-        let base: u8 = 2;
+        let base: u16 = 2;
         // Workaround not having access to powi
         if exp.is_positive() {
             mant as f32 * base.pow(exp as u32) as f32
@@ -82,6 +82,7 @@ mod tests {
         assert_ne!(result, 0.3);
         assert_eq!(slinear11::to(0xE054), 5.25);
         assert_eq!(slinear11::to(0xEDAA), -74.75);
+        assert_eq!(slinear11::to(0xC330), 3.1875);
     }
 
     #[test]
